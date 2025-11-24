@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: mongo:latest
+    command: ["mongod", "--logpath", "/dev/null", "--quiet"]
+    container_name: products-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      # Check if MongoDB is ready to accept connections
+      test: mongosh --eval "db.adminCommand('ping')" --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: products-api
+    restart: always
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    healthcheck:
+      # Check if API is ready by testing Swagger docs endpoint
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+volumes:
+  mongo_data:
