@@ -16,7 +16,7 @@ export class AuthController {
     style: 'form',
     explode: true,
   })
-  async login(@Query() dto: LoginDto) {
+  login(@Query() dto: LoginDto) {
     return this.authService.signIn(dto?.username, dto?.password);
   }
 }

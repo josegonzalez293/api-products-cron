@@ -7,20 +7,24 @@ describe('ReportsController', () => {
   let controller: ReportsController;
   const mockService = {
     deletedPercentage: jest.fn().mockResolvedValue({ deleted: 10 }),
-    productsByDateRange: jest.fn().mockResolvedValue([{ from: "2020-01-01", to: "2020-12-31", price: true }]),
+    productsByDateRange: jest
+      .fn()
+      .mockResolvedValue([
+        { from: '2020-01-01', to: '2020-12-31', price: true },
+      ]),
     topCategories: jest.fn().mockResolvedValue([{ category: 'x', count: 2 }]),
   };
 
   const mockAuthService = {
     verifyToken: jest.fn().mockReturnValue(true),
-  }; 
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ReportsController],
       providers: [
         { provide: ReportsService, useValue: mockService },
-        { provide: AuthService, useValue: mockAuthService }
+        { provide: AuthService, useValue: mockAuthService },
       ],
     }).compile();
 
@@ -39,9 +43,9 @@ describe('ReportsController', () => {
     const to = '2020-12-31';
     const price = true;
 
-    await expect(controller.getProductsByDateRange(undefined, from, to, price)).resolves.toEqual([
-      { from: "2020-01-01", to: "2020-12-31", price: true },
-    ]);
+    await expect(
+      controller.getProductsByDateRange(undefined, from, to, price),
+    ).resolves.toEqual([{ from: '2020-01-01', to: '2020-12-31', price: true }]);
     expect(mockService.productsByDateRange).toHaveBeenCalledWith(
       from,
       to,

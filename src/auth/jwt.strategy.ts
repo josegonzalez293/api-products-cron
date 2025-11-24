@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-jwt';
-import type {
-  Request,
+import {
+  Strategy,
   StrategyOptions,
   JwtFromRequestFunction,
 } from 'passport-jwt';
+import type { Request } from 'express';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 const bearerTokenExtractor: JwtFromRequestFunction = (
   req: Request,
 ): string | null => {
-  const authorizationHeader = req.headers?.authorization;
+  const authorizationHeader: string | undefined = req.headers?.authorization;
   if (!authorizationHeader) {
     return null;
   }
+
   const [scheme, token] = authorizationHeader.split(' ');
   if (scheme?.toLowerCase() !== 'bearer' || !token) {
     return null;
@@ -25,15 +26,17 @@ const bearerTokenExtractor: JwtFromRequestFunction = (
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
-    const options: StrategyOptions = {
+    const secretOrKey: string = (
+      process.env.JWT_SECRET ?? 'defaultSecret'
+    ).toString();
+    super({
       jwtFromRequest: bearerTokenExtractor,
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'defaultSecret',
-    };
-    super(options);
+      secretOrKey,
+    } satisfies StrategyOptions);
   }
 
-  public validate(payload: JwtPayload) {
+  public validate(payload: JwtPayload): { userId: string; username: string } {
     return { userId: payload.sub, username: payload.username };
   }
 }

@@ -1,11 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { AuthToken } from './interfaces/auth-token.interface';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   private readonly adminU: string;
   private readonly adminP: string;
 
@@ -17,7 +18,7 @@ export class AuthService {
     this.adminP = this.configService.get<string>('API_PASSWORD', 'password');
   }
   private readonly expiresIn: number = process.env.JWT_EXPIRES_IN
-    ? parseInt(process.env.JWT_EXPIRES_IN)
+    ? parseInt(process.env.JWT_EXPIRES_IN, 10)
     : 3600;
 
   private validateUser(username: string, password: string): JwtPayload {
@@ -27,23 +28,19 @@ export class AuthService {
     throw new UnauthorizedException('Invalid credentials');
   }
 
-  private login(username: string): {
-    accessToken: string;
-    expiresIn: number;
-    expiresAt: number;
-  } {
+  private login(username: string): AuthToken {
     const payload: JwtPayload = { sub: username, username };
     const token = this.jwtService.sign(payload, { expiresIn: this.expiresIn });
     const expiresAt = Math.floor(Date.now() / 1000) + this.expiresIn;
     return { accessToken: token, expiresIn: this.expiresIn, expiresAt };
   }
 
-  async signIn(username: string, password: string): Promise<{ accessToken: string }> {
+  signIn(username: string, password: string): AuthToken {
     const user = this.validateUser(username, password);
-    return await this.login(user.username);
+    return this.login(user.username);
   }
 
-  public verifyToken(token?: string) {
+  public verifyToken(token?: string): JwtPayload {
     if (!token) {
       throw new UnauthorizedException('Token missing');
     }
@@ -59,9 +56,12 @@ export class AuthService {
       if (!secret) {
         throw new UnauthorizedException('JWT secret not configured on server');
       }
-      const payload = jwt.verify(tokenValue, secret);
+      const payload: JwtPayload = this.jwtService.verify(tokenValue, {
+        secret,
+      });
       return payload;
-    } catch {
+    } catch (err) {
+      this.logger.error('Token verification failed', err);
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

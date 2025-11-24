@@ -47,20 +47,24 @@ describe('AuthService', () => {
   });
 
   describe('signIn', () => {
-    it('should return access token for valid credentials', async () => {
-      const result = await authService.signIn(ADMIN_USERNAME, ADMIN_PASSWORD);
+    it('should return access token for valid credentials', () => {
+      const result = authService.signIn(ADMIN_USERNAME, ADMIN_PASSWORD);
       const expiresAt = Math.floor(Date.now() / 1000) + 3600;
-      expect(result).toEqual({ accessToken: SIGNED_TOKEN, expiresIn: 3600, expiresAt });
+      expect(result).toEqual({
+        accessToken: SIGNED_TOKEN,
+        expiresIn: 3600,
+        expiresAt,
+      });
       expect(jwtSignSpy).toHaveBeenCalledWith(
         { sub: ADMIN_USERNAME, username: ADMIN_USERNAME },
         { expiresIn: 3600 },
       );
     });
 
-    it('should throw UnauthorizedException for invalid credentials', async () => {
-      await expect(
-        authService.signIn('wrongUser', 'wrongPass'),
-      ).rejects.toThrow(UnauthorizedException);
+    it('should throw UnauthorizedException for invalid credentials', () => {
+      expect(() => authService.signIn('wrongUser', 'wrongPass')).toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });
