@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "f471ff9c-8eed-4203-9f29-17c5f90dfdd5",
+		"name": "API Products",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "1440471"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All products",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/products",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "maxPrice",
+									"value": "1000",
+									"description": "number",
+									"disabled": true
+								},
+								{
+									"key": "minPrice",
+									"value": "20",
+									"description": "number",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Dove Advanced 9L3BON",
+									"description": "name of product",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "Tools & Hardware",
+									"description": "category",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "3",
+									"description": "number",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete product by externalId",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:3000/products/4IJX6AW7SzdjdxHEZ7aoo8"
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by externalId",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/products/4IJX6AW7SzdjdxHEZ7aoo8"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/auth/login?username=admin&password=cGFzczIwMjUhLg==",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "admin"
+								},
+								{
+									"key": "password",
+									"value": "cGFzczIwMjUhLg=="
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "Get deleted percentage report",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NjM5NDk4MDMsImV4cCI6MTc2Mzk1MzQwM30.Mbp7xdbefcs7II6bPb3xZZLmf4bjDUrxMoxVCFHXLyU",
+								"type": "text"
+							}
+						],
+						"url": "localhost:3000/reports/deleted-percentage"
+					},
+					"response": []
+				},
+				{
+					"name": "Report by date range",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NjM5ODc4MzIsImV4cCI6MTc2Mzk5MTQzMn0.qlruIAoJfwXccKs8k27IgONHoAkHUsWHaByMGpPsag4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/reports/products-by-date-range?from=2025-11-10&to=2025-11-14&price=tru",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"reports",
+								"products-by-date-range"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2025-11-10",
+									"description": "start YYYY-MM-DD"
+								},
+								{
+									"key": "to",
+									"value": "2025-11-14",
+									"description": "end YYYY-MM-DD"
+								},
+								{
+									"key": "price",
+									"value": "tru",
+									"description": "boolean"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Top categories report",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NjM5NDk4MDMsImV4cCI6MTc2Mzk1MzQwM30.Mbp7xdbefcs7II6bPb3xZZLmf4bjDUrxMoxVCFHXLyU",
+								"type": "text"
+							}
+						],
+						"url": "localhost:3000/reports/top-categories"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
